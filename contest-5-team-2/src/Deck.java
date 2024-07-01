@@ -4,35 +4,45 @@ import java.util.List;
 import java.util.Arrays;
 
 public class Deck {
-    private List<Card> cards;
+    private List<Card> deck;
 
     public Deck() {
-        this.cards = new ArrayList<>();
+        this.deck = new ArrayList<>();
         initializeDeck();
         shuffleDeck();
     }
 
     private void initializeDeck() {
-        String[] suits = {"", "inima neagra", "inima rosie", "romb"};
-        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
-        int[] values = {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11};
-        List<String> ranksList = Arrays.asList(ranks);
-
-        for (int i = 0; i < 4; i++) {
-            for (String suit : suits) {
-                for (String rank : ranks) {
-                    cards.add(new Card(values[ranksList.indexOf(rank)], rank, suit));
-                }
+        String[] suits = {"♥️", "♠️", "♦️", "♣️"};
+        for (String suit : suits) {
+            for (int i = 2; i <= 14; i++) {
+                this.deck.add(new Card(i, suit));
+                System.out.println(new Card(i, suit));
             }
         }
+        System.out.println(deck.size());
+    }
+
+    public List<Card> getDeck(){
+        return this.deck;
     }
 
     private void shuffleDeck() {
-        Collections.shuffle(this.cards);
+        Collections.shuffle(this.deck);
     }
 
     public Card drawCard() {
-        return cards.remove(cards.size() - 1);
+        return deck.remove(deck.size() - 1);
+    }
+
+    public void showDeck()
+    {
+        for(Card card : deck)
+        {
+            System.out.println("Card: " + card);
+
+        }
+        System.out.println("Size of Deck: " + deck.size());
     }
 
 }

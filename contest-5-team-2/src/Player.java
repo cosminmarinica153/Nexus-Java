@@ -1,24 +1,33 @@
 import java.util.*;
 
+
 public class Player {
-    Chip[] chips;
-    List<Card> hand;
-    int balance;
+    protected String type;
+    protected ArrayList<Card> hand;
+    protected int balance;
 
-    public Player(Chip[] chips, List<Card> hand, int balance) {
-        this.chips = chips;
+    public Player(String type, ArrayList<Card> hand) {
+        this.type = type;
         this.hand = hand;
-        this.balance = balance;
+
     }
 
-    public void Hit() {
-        Card card = BlackjackGame.deck.drawCard();
+    public String getType() {
+        return type;
+    }
+    public List<Card> getHand() {
+        return hand;
+    }
+    public int getBalance() {
+        return balance;
+    }
+
+    public void addCard(Card card) {
         hand.add(card);
-        System.out.println("Player has drawn a " + card.getRank());
     }
 
-    public void Stand() {
-        System.out.println("Player has stood");
+    public ArrayList<Card> getCards(){
+        return new ArrayList<>(this.hand);
     }
 
 }

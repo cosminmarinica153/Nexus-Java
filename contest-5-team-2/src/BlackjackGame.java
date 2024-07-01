@@ -1,12 +1,77 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class BlackjackGame {
-    public static Deck deck = new Deck();
+    private List<Card> combinedDeck;
+    private List<Player> players;
 
-
-    public static void main(String[] args) {
-        System.out.println("Hello world");
+    public BlackjackGame() {
+        this.combinedDeck = new ArrayList<>();
+        initializeDecks();
+        initializePlayers();
+        shuffleCombinedDeck();
+        dealFirst2Cards();
     }
-}
 
+    private void initializePlayers(){
+        players = new ArrayList<>();
+        Player human = new Player("Human", new ArrayList<>());
+        Player aIPlayer1 = new Player("AIPlayer1", new ArrayList<>());
+        Player aIPlayer2 = new Player("AIPlayer2", new ArrayList<>());
+        Player dealer = new Player("Dealer", new ArrayList<>());
+        players.add(human);
+        players.add(aIPlayer1);
+        players.add(aIPlayer2);
+        players.add(dealer);
+    }
+    private void initializeDecks() {
+        for (int i = 0; i < 4; i++) {
+            Deck deck = new Deck();
+            combinedDeck.addAll(deck.getDeck());
+        }
+    }
+
+    private void shuffleCombinedDeck() {
+        Collections.shuffle(combinedDeck);
+    }
+
+    public Card drawCard() {
+        return combinedDeck.remove(combinedDeck.size() - 1);
+    }
+
+    public void showCombinedDeck() {
+        for (Card card : combinedDeck) {
+            System.out.println("Card: " + card);
+        }
+        System.out.println("Size of Combined Deck: " + combinedDeck.size());
+    }
+
+    private void hit(Player playerToHit)
+    {
+        if(!combinedDeck.isEmpty()) {
+            Card card = combinedDeck.remove(combinedDeck.size() - 1);
+            playerToHit.addCard(card);
+        }
+        if(playerToHit.getHand().size() >= 2)
+            System.out.println("Player got: " + playerToHit.getType() + " the following card" + playerToHit.getCards());
+
+    }
+
+    public void dealFirst2Cards()
+    {
+        for(int i = 0; i < 2; i++){
+            if(!players.isEmpty()) {
+                for(Player player : players) {
+                    hit(player);
+                }
+            }
+        }
+
+    }
+
+
+}
 
 //
 /*
