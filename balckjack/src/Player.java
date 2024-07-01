@@ -2,12 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Player {
-    private String name;
     private List<Card> hand;
     private int handValue;
 
-    public Player(String name){
-        this.name = name;
+    public Player(){
         this.hand = new ArrayList<>();
         this.handValue = 0;
     }

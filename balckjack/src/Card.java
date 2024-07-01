@@ -13,10 +13,6 @@ public class Card{
         return value;
     }
 
-    public String getSuits() {
-        return suits;
-    }
-
     public String getRank() {
         return rank;
     }

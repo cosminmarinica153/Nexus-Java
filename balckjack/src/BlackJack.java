@@ -3,14 +3,13 @@ import java.util.Scanner;
 public class BlackJack {
     Scanner scanner = new Scanner(System.in);
     Deck deck = new Deck();
-    private Player humanPLayer = new Player("Human");
-    private Player dealPlayer = new Player("Deal");
+    private Player humanPLayer = new Player();
+    private Player dealPlayer = new Player();
 
     public BlackJack() {
         dealCards();
         tempShowPlayerInfo();
         choices();
-
     }
 
     public void dealCards() {
@@ -47,24 +46,13 @@ public class BlackJack {
             } else {
                 System.out.println("Dealer final cards: " + dealPlayer + "Value: " + dealPlayer.handValue());
                 if(dealPlayer.handValue() >= humanPLayer.handValue())
-                    System.out.println("Dealer won, you lost!");
-                else System.out.println("You won!");
+                    System.out.println("Dealer player won!");
+                else System.out.println("Human player won!");
                 return;
             }
-
-            ;
         }
     }
 
-    public void score() {
-        System.out.println("Human score: " + humanPLayer.handValue() + " Dealer score: " + dealPlayer.handValue());
-        if (humanPLayer.handValue() > dealPlayer.handValue()) {
-            System.out.println("Human wins!");
-        } else if (humanPLayer.handValue() < dealPlayer.handValue()) {
-            System.out.println("Dealer wins!");
-        }
-
-    }
     public void tempShowPlayerInfo() {
         System.out.println(humanPLayer);
         System.out.println("Your value is: " + humanPLayer.handValue());
