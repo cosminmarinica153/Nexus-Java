@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Contest5/Contest5.iml" filepath="$PROJECT_DIR$/Contest5/Contest5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Nexus-Java.iml" filepath="$PROJECT_DIR$/.idea/Nexus-Java.iml" />
+    </modules>
+  </component>
+</project>
