@@ -18,9 +18,7 @@ public class Contest5Team1 {
         System.out.println("cartea mea este " + carteaMea);
     }
 }
-class Blackjack {
 
-}
 class Card {
     private int value;
     private String suit;
@@ -52,6 +50,17 @@ class CardGame{
         }
     }
 }
+class Blackjack extends CardGame {
+    private Player humanPlayer;
+    private Player CPU;
+
+    public Blackjack() {
+        this.deck = new ArrayList<>();
+        this.humanPlayer = new Player("Ghita", 100);
+        this.CPU = new Player ("Gogu");
+    }
+
+}
 class Player {
     protected String name;
     protected List<Card> hand;
@@ -62,5 +71,17 @@ class Player {
         this.hand = new ArrayList<>();
         this.credits = credits;
     }
+    public Player(String name){
+        this.name = name;
+        this.hand = new ArrayList<>();
+
+    }
+    public void addCardToHand(Card card){
+        this.hand.add(card);
+    }
+
+
 }
+
+
 
