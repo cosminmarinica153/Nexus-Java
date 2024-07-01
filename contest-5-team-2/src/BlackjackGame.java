@@ -2,13 +2,10 @@ public class BlackjackGame {
     public static Deck deck = new Deck();
 
 
-
-
     public static void main(String[] args) {
-       
+
     }
 }
-
 
 
 //
@@ -29,11 +26,11 @@ public class BlackjackGame {
  * jucatorul isi ia banii inapoi
  * Daca Dealer-ul NU are blackjack si jucatorii au suma cartilor mai mare decat a dealer-ului dar sub 21,
  * jucatorii/jucatorul castiga
- * 
- * 
- * 
+ *
+ *
+ *
  */
 
- //TODO: Player
- //TODO: Deck
- //TODO: Card 
+//TODO: Player
+//TODO: Deck
+//TODO: Card
