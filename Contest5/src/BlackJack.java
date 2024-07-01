@@ -1,8 +1,6 @@
 
 
 import utils.Card;
-import utils.Deck;
-import utils.Player;
 
 import java.util.ArrayList;
 import java.util.Scanner;
