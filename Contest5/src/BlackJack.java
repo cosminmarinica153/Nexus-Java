@@ -28,7 +28,7 @@ public class BlackJack {
         this.human = new Player("Player", emptyHand);
         this.dealer = new Player("Dealer", emptyHand);
         this.aiPlayer1 = new Player("Ai", emptyHand);
-        this.aiPlayer2 = new Player("Ai", emptyHand);
+        this.aiPlayer2 = new Player("Ai2", emptyHand);
 
         players = new ArrayList<>();
 
@@ -62,7 +62,7 @@ public class BlackJack {
             } else {
                 stand(this.currPlayer);
             }
-        } else {
+        } else if(currPlayer.checkTotal() < 21){
             System.out.println("Make your choice: ");
             System.out.println("(1) Hit");
             System.out.println("(2) Stand");
@@ -74,6 +74,14 @@ public class BlackJack {
             } else {
                 System.out.println("Invalid choice! Bye");
             }
+        }else{
+            System.out.println("You busted! Out");
+            stand(this.currPlayer);
+        }
+        if(!activePlayers.isEmpty()){
+            for(int i = 0; i < activePlayers.size(); i ++) {
+
+            }
         }
     }
 
@@ -83,7 +91,7 @@ public class BlackJack {
 
     private void hit(Player playerToHit) {
         if (!this.cards.isEmpty()) {
-            Card card = cards.remove(cards.size() - 1);
+            Card card = cards.removeLast();
             playerToHit.addCards(card);
         }
         if (this.cards.size() >= 2) {

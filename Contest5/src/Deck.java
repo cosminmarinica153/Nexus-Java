@@ -21,5 +21,6 @@ public class Deck {
         Collections.shuffle(this.deck);
     }
 
-    public ArrayList<Card> getDeck() { return this.deck; }
+    public ArrayList<Card> getDeck() {
+        return this.deck; }
 }
