@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MyCardGames/MyCardGames.iml" filepath="$PROJECT_DIR$/MyCardGames/MyCardGames.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Nexus-Java.iml" filepath="$PROJECT_DIR$/.idea/Nexus-Java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Refactoring-Code-Team-4/Refactoring-Code-Team-4.iml" filepath="$PROJECT_DIR$/Refactoring-Code-Team-4/Refactoring-Code-Team-4.iml" />
+    </modules>
+  </component>
+</project>
