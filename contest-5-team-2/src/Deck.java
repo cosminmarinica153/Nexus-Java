@@ -9,7 +9,6 @@ public class Deck {
     public Deck() {
         this.deck = new ArrayList<>();
         initializeDeck();
-        shuffleDeck();
     }
 
     private void initializeDeck() {
@@ -17,18 +16,13 @@ public class Deck {
         for (String suit : suits) {
             for (int i = 2; i <= 14; i++) {
                 this.deck.add(new Card(i, suit));
-               //Show cards System.out.println(new Card(i, suit));
             }
         }
-     //Show deck size   System.out.println(deck.size());
+        Collections.shuffle(this.deck);
     }
 
     public List<Card> getDeck(){
         return this.deck;
-    }
-
-    private void shuffleDeck() {
-        Collections.shuffle(this.deck);
     }
 
     public Card drawCard() {
