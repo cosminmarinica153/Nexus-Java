@@ -192,9 +192,11 @@ public class BlackjackGame {
                     if (dealer.checkTotal() > remainingPlayer.checkTotal()) {
                         System.out.println(remainingPlayer.getType() + " has lost!");
                     } else if (dealer.checkTotal() == remainingPlayer.checkTotal()) {
-                        System.out.println("Draw between " + remainingPlayer.getType() + " and " + dealer.getType());
-                        if (remainingPlayer == this.human) {
-                            this.human.addBalance(this.currentBet);
+                        if (remainingPlayer != dealer) {
+                            System.out.println("Draw between " + remainingPlayer.getType() + " and " + dealer.getType());
+                            if (remainingPlayer == this.human) {
+                                this.human.addBalance(this.currentBet);
+                            }
                         }
                     } else {
                         System.out.println(remainingPlayer.getType() + " has won!");
