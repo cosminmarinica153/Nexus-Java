@@ -19,6 +19,7 @@ public class BlackjackGame {
     public BlackjackGame() {
         this.combinedDeck = new ArrayList<>();
         this.exitGame = false;
+        this.human = new Player("Human", new ArrayList<>(), 1000);
         initializePlayers();
         initializeDecks();
         shuffleCombinedDeck();
@@ -43,7 +44,7 @@ public class BlackjackGame {
     private void initializePlayers() {
         players = new ArrayList<>();
         remainingPlayers = new ArrayList<>();
-        this.human = new Player("Human", new ArrayList<>(), 1000);
+        human.resetHand();
         initializeAi();
 
         players.add(human);
@@ -84,6 +85,7 @@ public class BlackjackGame {
     private int getBetAmount() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Place your bets! (200-1000)");
+        System.out.println("(" + human.getBalance() + ")");
         while (true) {
             try {
                 int bet = scanner.nextInt();
