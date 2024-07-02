@@ -30,6 +30,10 @@ public class Player {
             else
                 this.total += card.getValue();
         }
+        for(Card card : this.cards) {
+        if(card.getValue() == 11 && this.total >21)
+            this.total -= 10;
+        }
         return this.total;
     }
 
@@ -46,16 +50,17 @@ public class Player {
         return new ArrayList<>(this.cards);
     }
 
-    public void checkForAces() {
-        if (this.total > 21) {
-            for (Card card : this.cards) {
-                if (card.getValue() == 11) {
-                    card = new Card(1, card.getSuit());
-                    checkTotal();
-                }
-            }
-        }
-    }
+//    public boolean checkForAces() {
+//        if (this.total > 21) {
+//            for (Card card : this.cards) {
+//                if (card.getValue() == 11) {
+//                    card = new Card(1, card.getSuit());
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
 
     public Card putCardOnTable() {
         if (this.cards.isEmpty())

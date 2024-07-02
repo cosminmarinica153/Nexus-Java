@@ -3,6 +3,8 @@
 import utils.Card;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class BlackJack {
@@ -12,6 +14,9 @@ public class BlackJack {
     private final Player aiPlayer1;
     private final Player aiPlayer2;
     private Player currPlayer;
+    private Player nextPlayer;
+    private Player winPLayer;
+    private static int score = Integer.MIN_VALUE;
 
     private final ArrayList<Player> players;
 
@@ -32,10 +37,10 @@ public class BlackJack {
 
         players = new ArrayList<>();
 
-        players.add(dealer);
         players.add(human);
         players.add(aiPlayer1);
         players.add(aiPlayer2);
+        players.add(dealer);
 
         play();
     }
@@ -54,15 +59,20 @@ public class BlackJack {
     private void nextPlayer() {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Player> activePlayers = new ArrayList<>(players);
+        this.winPLayer = activePlayers.getFirst();
         this.currPlayer = activePlayers.getFirst();
         activePlayers.remove(activePlayers.getFirst());
         if(!this.currPlayer.getType().equals("Player")) {
             if(this.currPlayer.checkTotal() < 17) {
                 hit(this.currPlayer);
-            } else {
+            } else if(this.currPlayer.checkTotal() >= 17 && this.currPlayer.checkTotal() <= 21) {
                 stand(this.currPlayer);
             }
-        } else if(currPlayer.checkTotal() < 21){
+                else if(this.currPlayer.checkTotal() > 21){
+                System.out.println(currPlayer.getType()+ " busted. He is out!");
+                stand(this.currPlayer);
+            }
+        } else if(currPlayer.checkTotal() <= 21){
             System.out.println("Make your choice: ");
             System.out.println("(1) Hit");
             System.out.println("(2) Stand");
@@ -78,12 +88,18 @@ public class BlackJack {
             System.out.println("You busted! Out");
             stand(this.currPlayer);
         }
-        if(!activePlayers.isEmpty()){
-            for(int i = 0; i < activePlayers.size(); i ++) {
-
-            }
-        }
+//        for(int i= 0 ; i< activePlayers.size(); i++){
+//            for(int j= i+1 ; j< activePlayers.size(); j++){
+//                currPlayer = activePlayers.get(i);
+//                nextPlayer = activePlayers.get(j);
+//                if(currPlayer.checkTotal() > nextPlayer.checkTotal())
+//                    winPLayer = currPlayer;
+//            }
+//        }
+//        System.out.println("The winner is " + winPLayer.getType());
     }
+
+
 
     private void stand(Player playerToStand) {
         this.players.remove(playerToStand);
