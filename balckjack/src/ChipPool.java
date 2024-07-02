@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ChipPool {
     private ArrayList<Chip> chipPool;
@@ -11,8 +12,13 @@ public class ChipPool {
 
         for(int x = 0; x < 50; x++) {
             for(int i = 0; i < colors.length; i++) {
-                if(colors[i].equals("white") && colors[i].equals("red") && colors[i].equals("blue") && x >= 25)
+                if (x >= 25) {
+                    if (colors[i].equals("white") || colors[i].equals("red") || colors[i].equals("blue")) {
+                        chipPool.add(new Chip(colors[i], values[i]));
+                    }
+                } else {
                     chipPool.add(new Chip(colors[i], values[i]));
+                }
             }
         }
     }
@@ -22,52 +28,53 @@ public class ChipPool {
 
         // 10 white, 6 red, 6 blue, 4 green, 2 orange, 1 black => 27 chips, value 400$
         int[] count = {10, 6, 6, 4, 2, 1};
-        for (Chip chip : chipPool) {
-            if("white".equals(chip.getColor()) && count[0] > 0) {
+
+        Iterator<Chip> iterator = chipPool.iterator();
+        while (iterator.hasNext()) {
+            Chip chip = iterator.next();
+
+            if (chip.getColor().equals("white") && count[0] > 0) {
                 buyIn.add(chip);
-                chipPool.remove(chip);
+                iterator.remove();
                 count[0]--;
-            }
-            if("red".equals(chip.getColor()) && count[1] > 0) {
+            } else if (chip.getColor().equals("red") && count[1] > 0) {
                 buyIn.add(chip);
-                chipPool.remove(chip);
+                iterator.remove();
                 count[1]--;
-            }
-            if("blue".equals(chip.getColor()) && count[2] > 0) {
+            } else if (chip.getColor().equals("blue") && count[2] > 0) {
                 buyIn.add(chip);
-                chipPool.remove(chip);
+                iterator.remove();
                 count[2]--;
-            }
-            if("green".equals(chip.getColor()) && count[3] > 0) {
+            } else if (chip.getColor().equals("green") && count[3] > 0) {
                 buyIn.add(chip);
-                chipPool.remove(chip);
+                iterator.remove();
                 count[3]--;
-            }
-            if("orange".equals(chip.getColor()) && count[4] > 0) {
+            } else if (chip.getColor().equals("orange") && count[4] > 0) {
                 buyIn.add(chip);
-                chipPool.remove(chip);
+                iterator.remove();
                 count[4]--;
-            }
-            if("black".equals(chip.getColor()) && count[5] > 0) {
+            } else if (chip.getColor().equals("black") && count[5] > 0) {
                 buyIn.add(chip);
-                chipPool.remove(chip);
+                iterator.remove();
                 count[5]--;
             }
 
+            // Check if all counts are zero to exit early
             boolean exit = true;
-            for(int c: count){
-                if(c > 0){
+            for (int c : count) {
+                if (c > 0) {
                     exit = false;
                     break;
                 }
             }
 
-            if(exit) break;
+            if (exit) break;
         }
 
         return buyIn.toArray(new Chip[0]);
     }
 
+    // something does not work here, it runs indefinitely
     public Chip[] buyChips(int amount){
         ArrayList<Chip> chips = new ArrayList<>();
 
