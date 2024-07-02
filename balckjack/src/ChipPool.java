@@ -1,5 +1,8 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 public class ChipPool {
     private ArrayList<Chip> chipPool;
@@ -10,8 +13,8 @@ public class ChipPool {
 
         chipPool = new ArrayList<>();
 
-        for(int x = 0; x < 50; x++) {
-            for(int i = 0; i < colors.length; i++) {
+        for (int x = 0; x < 50; x++) {
+            for (int i = 0; i < colors.length; i++) {
                 if (x >= 25) {
                     if (colors[i].equals("white") || colors[i].equals("red") || colors[i].equals("blue")) {
                         chipPool.add(new Chip(colors[i], values[i]));
@@ -23,7 +26,7 @@ public class ChipPool {
         }
     }
 
-    public Chip[] startChips(){
+    public Chip[] startChips() {
         ArrayList<Chip> buyIn = new ArrayList<>();
 
         // 10 white, 6 red, 6 blue, 4 green, 2 orange, 1 black => 27 chips, value 400$
@@ -75,61 +78,48 @@ public class ChipPool {
     }
 
     // something does not work here, it runs indefinitely
-    public Chip[] buyChips(int amount){
+    public Chip[] buyChips(int amount) {
+        ArrayList<Chip> chipsCopy = chipPool;
         ArrayList<Chip> chips = new ArrayList<>();
 
-        Chip chip;
-        while (amount > 0){
-            chip = new Chip("black", 100);
-            if(amount > 100 && chipPool.contains(chip)){
+        Collections.sort(chipsCopy, (chip1, chip2) -> Integer.compare(chip2.getValue(), chip1.getValue()));
+
+        Iterator<Chip> iterator = chipsCopy.iterator();
+        while (iterator.hasNext() & amount > 0) {
+
+            Chip chip = iterator.next();
+            if (amount >= 100) {
                 chips.add(chip);
-                chipPool.remove(chip);
                 amount -= 100;
-                continue;
-            }
-            chip = new Chip("orange", 50);
-            if(amount > 50 && chipPool.contains(chip)){
+                chip = iterator.next();
+            } else if (amount >= 50) {
                 chips.add(chip);
-                chipPool.remove(chip);
                 amount -= 50;
-                continue;
-            }
-            chip = new Chip("green", 25);
-            if(amount > 25 && chipPool.contains(chip)){
+                chip = iterator.next();
+            } else if (amount >= 25) {
                 chips.add(chip);
-                chipPool.remove(chip);
                 amount -= 25;
-                continue;
-            }
-            chip = new Chip("blue", 10);
-            if(amount > 10 && chipPool.contains(chip)){
+                chip = iterator.next();
+            } else if (amount >= 10) {
                 chips.add(chip);
-                chipPool.remove(chip);
                 amount -= 10;
-                continue;
-            }
-            chip = new Chip("red", 5);
-            if(amount > 5 && chipPool.contains(chip)){
+                chip = iterator.next();
+            } else if (amount >= 5) {
                 chips.add(chip);
-                chipPool.remove(chip);
                 amount -= 5;
-                continue;
-            }
-            chip = new Chip("white", 1);
-            if(amount > 1 && chipPool.contains(chip)){
+                chip = iterator.next();
+            } else {
                 chips.add(chip);
-                chipPool.remove(chip);
                 amount -= 1;
             }
         }
-
         return chips.toArray(new Chip[0]);
     }
 
-    public int cashIn(Chip[] chips){
+    public int cashIn(Chip[] chips) {
         int value = 0;
 
-        for(Chip chip: chips){
+        for (Chip chip : chips) {
             value += chip.getValue();
             chipPool.add(chip);
         }
