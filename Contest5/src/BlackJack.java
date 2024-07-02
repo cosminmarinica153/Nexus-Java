@@ -14,9 +14,9 @@ public class BlackJack {
     private final Player aiPlayer1;
     private final Player aiPlayer2;
     private Player currPlayer;
-    private Player nextPlayer;
-    private Player winPLayer;
-    private static int score = Integer.MIN_VALUE;
+//    private Player nextPlayer;
+//    private Player winPLayer;
+//    private static int score = Integer.MIN_VALUE;
 
     private final ArrayList<Player> players;
 
@@ -59,7 +59,6 @@ public class BlackJack {
     private void nextPlayer() {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Player> activePlayers = new ArrayList<>(players);
-        this.winPLayer = activePlayers.getFirst();
         this.currPlayer = activePlayers.getFirst();
         activePlayers.remove(activePlayers.getFirst());
         if(!this.currPlayer.getType().equals("Player")) {
@@ -88,15 +87,11 @@ public class BlackJack {
             System.out.println("You busted! Out");
             stand(this.currPlayer);
         }
-//        for(int i= 0 ; i< activePlayers.size(); i++){
-//            for(int j= i+1 ; j< activePlayers.size(); j++){
-//                currPlayer = activePlayers.get(i);
-//                nextPlayer = activePlayers.get(j);
-//                if(currPlayer.checkTotal() > nextPlayer.checkTotal())
-//                    winPLayer = currPlayer;
-//            }
-//        }
-//        System.out.println("The winner is " + winPLayer.getType());
+        int i = 0;
+        for(Player player : activePlayers) {
+            System.out.println(player.checkTotal());
+            i++;
+        }
     }
 
 
