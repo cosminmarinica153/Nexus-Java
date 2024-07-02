@@ -1,10 +1,12 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 public class BlackjackGame {
     private List<Card> combinedDeck;
     private List<Player> players;
+    private Player currentPlayer;
 
     public BlackjackGame() {
         this.combinedDeck = new ArrayList<>();
@@ -12,9 +14,11 @@ public class BlackjackGame {
         initializePlayers();
         shuffleCombinedDeck();
         dealFirst2Cards();
+        playGame();
+
     }
 
-    private void initializePlayers(){
+    private void initializePlayers() {
         players = new ArrayList<>();
         Player human = new Player("Human", new ArrayList<>());
         Player aIPlayer1 = new Player("AIPlayer1", new ArrayList<>());
@@ -25,15 +29,18 @@ public class BlackjackGame {
         players.add(aIPlayer2);
         players.add(dealer);
     }
+
     private void initializeDecks() {
         for (int i = 0; i < 4; i++) {
             Deck deck = new Deck();
             combinedDeck.addAll(deck.getDeck());
         }
+        System.out.println("Decks initialized with total cards: " + combinedDeck.size());
     }
 
     private void shuffleCombinedDeck() {
         Collections.shuffle(combinedDeck);
+        System.out.println("Deck shuffled.");
     }
 
     public Card drawCard() {
@@ -47,31 +54,65 @@ public class BlackjackGame {
         System.out.println("Size of Combined Deck: " + combinedDeck.size());
     }
 
-    private void hit(Player playerToHit)
-    {
-        if(!combinedDeck.isEmpty()) {
+    private void hit(Player playerToHit) {
+        if (!combinedDeck.isEmpty()) {
             Card card = combinedDeck.remove(combinedDeck.size() - 1);
             playerToHit.addCard(card);
         }
-        if(playerToHit.getHand().size() >= 2)
-            System.out.println("Player got: " + playerToHit.getType() + " the following card" + playerToHit.getCards());
-
+        if(playerToHit.getHand().size() > 2)
+            System.out.println(playerToHit.getType() + " now has: " + playerToHit.getHand() + "( " + playerToHit.checkTotal() + ")");
     }
 
-    public void dealFirst2Cards()
-    {
-        for(int i = 0; i < 2; i++){
-            if(!players.isEmpty()) {
-                for(Player player : players) {
-                    hit(player);
-                }
+    private void stand(Player playerToStand) {
+        this.players.remove(playerToStand);
+    }
+
+    public void dealFirst2Cards() {
+        for (int i = 0; i < 2; i++) {
+            for (Player player : players) {
+                hit(player);
             }
+        }
+        for (Player player : players) {
+            System.out.println(player.getType() + " got the following cards" + player.getCards() + "( " + player.checkTotal() + ")");
         }
 
     }
 
+    private void playGame()
+    {
+        while(!this.players.isEmpty()) {
+            nextPlayer();
+        }
+    }
 
+    private void nextPlayer(){
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Player> activePlayers = new ArrayList<>(players);
+        this.currentPlayer = activePlayers.getFirst();
+        activePlayers.remove(activePlayers.getFirst());
+        if(this.currentPlayer.getType().equals("Human"))
+        {
+            System.out.println("Now you have a choice: ");
+            System.out.println("(1) Hit");
+            System.out.println("(2) Stand");
+            int choice = scanner.nextInt();
+            if(choice == 1)
+                hit(this.currentPlayer);
+            else if(choice == 2)
+                stand(this.currentPlayer);
+            else
+                System.out.println("Invalid choice");
+        } else {
+            if(this.currentPlayer.checkTotal() < 17)
+                hit(this.currentPlayer);
+            else
+                stand(this.currentPlayer);
+        }
+
+    }
 }
+
 
 //
 /*

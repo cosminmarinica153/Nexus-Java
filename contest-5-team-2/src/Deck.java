@@ -17,10 +17,10 @@ public class Deck {
         for (String suit : suits) {
             for (int i = 2; i <= 14; i++) {
                 this.deck.add(new Card(i, suit));
-                System.out.println(new Card(i, suit));
+               //Show cards System.out.println(new Card(i, suit));
             }
         }
-        System.out.println(deck.size());
+     //Show deck size   System.out.println(deck.size());
     }
 
     public List<Card> getDeck(){
