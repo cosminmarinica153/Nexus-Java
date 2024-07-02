@@ -1,7 +1,8 @@
+package utils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Arrays;
 
 public class Deck {
     private List<Card> deck;
@@ -33,10 +34,10 @@ public class Deck {
     {
         for(Card card : deck)
         {
-            System.out.println("Card: " + card);
+            System.out.println("utils.Card: " + card);
 
         }
-        System.out.println("Size of Deck: " + deck.size());
+        System.out.println("Size of utils.Deck: " + deck.size());
     }
 
 }

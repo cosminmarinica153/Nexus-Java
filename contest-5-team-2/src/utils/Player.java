@@ -1,3 +1,5 @@
+package utils;
+
 import java.util.*;
 
 
@@ -62,7 +64,7 @@ public class Player {
     public ArrayList<Card> getCards(){
         return new ArrayList<>(this.hand);
     }
-    protected void resetHand() {
+    public void resetHand() {
         this.hand = new ArrayList<>();
     }
 

@@ -1,3 +1,7 @@
+import utils.Card;
+import utils.Deck;
+import utils.Player;
+
 import java.util.*;
 
 public class BlackjackGame {
@@ -63,7 +67,7 @@ public class BlackjackGame {
 
     private void shuffleCombinedDeck() {
         Collections.shuffle(combinedDeck);
-        System.out.println("Deck shuffled.");
+        System.out.println("utils.Deck shuffled.");
     }
 
     private void placeBet() {
