@@ -2,13 +2,17 @@ import java.util.Scanner;
 
 public class BlackJack {
     Scanner scanner = new Scanner(System.in);
-    Deck deck = new Deck();
-    private Player humanPLayer = new Player();
-    private Player dealPlayer = new Player();
+
+    private final Deck deck;
+    private final ChipPool chipPool;
+    private final Player humanPLayer = new Player();
+    private final Player dealPlayer = new Player();
 
     public BlackJack() {
+        deck = new Deck();
+        chipPool = new ChipPool();
         dealCards();
-        tempShowPlayerInfo();
+        showPlayerInfo();
         choices();
     }
 
@@ -53,7 +57,7 @@ public class BlackJack {
         }
     }
 
-    public void tempShowPlayerInfo() {
+    public void showPlayerInfo() {
         System.out.println(humanPLayer);
         System.out.println("Your value is: " + humanPLayer.handValue());
         System.out.println("Dealer's one card is : " + dealPlayer.getHand().get(1));
