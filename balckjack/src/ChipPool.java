@@ -77,7 +77,7 @@ public class ChipPool {
         return buyIn.toArray(new Chip[0]);
     }
 
-    // something does not work here, it runs indefinitely
+    // I fixed it by adding a chip color verification in the if statements
     public Chip[] buyChips(int amount) {
         ArrayList<Chip> chipsCopy = chipPool;
         ArrayList<Chip> chips = new ArrayList<>();
@@ -88,31 +88,45 @@ public class ChipPool {
         while (iterator.hasNext() & amount > 0) {
 
             Chip chip = iterator.next();
-            if (amount >= 100) {
+            if (amount >= 100 && chip.getColor().equals("black")) {
                 chips.add(chip);
+                iterator.remove();
+                chip = iterator.next();
                 amount -= 100;
-                chip = iterator.next();
-            } else if (amount >= 50) {
+            }
+            if (amount >= 50 && chip.getColor().equals("orange")) {
                 chips.add(chip);
+                iterator.remove();
+                chip = iterator.next();
                 amount -= 50;
-                chip = iterator.next();
-            } else if (amount >= 25) {
+            }
+            if (amount >= 25 && chip.getColor().equals("green")) {
                 chips.add(chip);
+                iterator.remove();
+                chip = iterator.next();
                 amount -= 25;
-                chip = iterator.next();
-            } else if (amount >= 10) {
+            }
+            if (amount >= 10 && chip.getColor().equals("blue")) {
                 chips.add(chip);
+                iterator.remove();
+                chip = iterator.next();
                 amount -= 10;
-                chip = iterator.next();
-            } else if (amount >= 5) {
+            }
+            if (amount >= 5 && chip.getColor().equals("red")) {
                 chips.add(chip);
+                iterator.remove();
+                chip = iterator.next();
                 amount -= 5;
-                chip = iterator.next();
-            } else {
+            }
+            if (amount >= 1 && chip.getColor().equals("white")) {
                 chips.add(chip);
+                iterator.remove();
                 amount -= 1;
             }
+
+            if(amount == 0) break;
         }
+
         return chips.toArray(new Chip[0]);
     }
 
