@@ -68,7 +68,7 @@ public class BlackjackGame {
 
     private void shuffleCombinedDeck() {
         Collections.shuffle(combinedDeck);
-        System.out.println("utils.Deck shuffled.");
+        System.out.println("Deck shuffled.");
     }
 
     private void placeBet() {
@@ -96,7 +96,7 @@ public class BlackjackGame {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input! Please enter a numeric value.");
-                scanner.next(); // Clear the invalid input
+                scanner.next();
             }
         }
     }
@@ -152,7 +152,7 @@ public class BlackjackGame {
                         if (this.currentPlayer.checkTotal() > 21) {
                             System.out.println("You have busted!");
                             playerTurn = false;
-                            players.remove(this.currentPlayer); // Remove the current player immediately if busted
+                            players.remove(this.currentPlayer);
                         }
                         break;
                     case 2:
@@ -174,7 +174,7 @@ public class BlackjackGame {
             stand(this.currentPlayer);
         }
         if (!exitGame && !players.isEmpty() && players.get(0) == this.currentPlayer) {
-            players.remove(0); // Remove the player after their turn if they haven't been removed already
+            players.remove(0);
         }
     }
 
