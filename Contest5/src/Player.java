@@ -6,21 +6,39 @@ public class Player {
     protected final String type;
     protected ArrayList<Card> cards;
     protected int total;
+    protected int credits;
 
-    public Player(String type, ArrayList<Card> cards) {
+    public Player(String type, ArrayList<Card> cards, int credits) {
+        this.type = type;
+        this.cards = new ArrayList<>(cards);
+        this.total = 0;
+        this.credits = credits;
+    }
+    public Player(String type,ArrayList<Card> cards){
         this.type = type;
         this.cards = new ArrayList<>(cards);
         this.total = 0;
     }
 
-    public void addCards(Card card) {
-        this.cards.add(card);
-        checkTotal();
+    public ArrayList<Card> getCards() {
+        if (this.type.equals("Dealer")) {
+            ArrayList<Card> dealerCards = new ArrayList<>(this.cards);
+            return dealerCards;
+        }
+        return new ArrayList<>(this.cards);
     }
 
-    public void addCards(ArrayList<Card> cards) {
-        this.cards.addAll(cards);
-        checkTotal();
+    public String getType() {
+        return this.type;
+    }
+    public int getCredits(){
+        return this.credits;
+    }
+    public void setCredits(int credits){
+        this.credits += credits;
+    }
+    public void setCards(ArrayList<Card> cards){
+        this.cards = cards;
     }
 
     public int checkTotal() {
@@ -44,17 +62,15 @@ public class Player {
 
     }
 
-    public String getType() {
-        return this.type;
+    public void addCards(Card card) {
+        this.cards.add(card);
+        checkTotal();
     }
 
-    public ArrayList<Card> getCards() {
-        if (this.type.equals("Dealer")) {
-            ArrayList<Card> dealerCards = new ArrayList<>(this.cards);
-            return dealerCards;
-        }
-        return new ArrayList<>(this.cards);
-    }
+    public void addCards(ArrayList<Card> cards) {
+        this.cards.addAll(cards);
+        checkTotal();
+    } 
 
     public void checkForAces() {
         if (this.total > 21) {

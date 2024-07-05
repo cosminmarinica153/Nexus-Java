@@ -9,19 +9,23 @@ public class Deck {
     public Deck(int min, int max) {
         this.deck = new ArrayList<>();
         initializeDeck(min, max);
+        shuffle();
     }
 
-    private void initializeDeck(int min, int max) {
-        String[] suits = {"♥️", "♠️", "♦️", "♣️"};
-        //String[] suits = {"A", "B", "C", "D"};
+    protected void initializeDeck(int min, int max) {
+        //String[] suits = {"♥️", "♠️", "♦️", "♣️"};
+        String[] suits = {"A", "B", "C", "D"};
         for (String suit : suits) {
             for (int i = min; i <= max; i++) {
                 this.deck.add(new Card(i, suit));
             }
         }
-        Collections.shuffle(this.deck);
     }
 
+    private void shuffle(){
+        Collections.shuffle(this.deck);
+
+    }
     public ArrayList<Card> getDeck() {
         return this.deck; }
 }

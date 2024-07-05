@@ -2,6 +2,7 @@
 import utils.Card;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class BlackJack {
@@ -10,7 +11,10 @@ public class BlackJack {
     private final Player dealer;
     private final Player aiPlayer1;
     private final Player aiPlayer2;
-    //private Player currPlayer;
+
+    private Scanner scanner = new Scanner(System.in);
+
+    // private Player currPlayer;
 
     private final ArrayList<Player> players;
 
@@ -21,13 +25,12 @@ public class BlackJack {
     public BlackJack() {
         // Initialize the cards
         deck = new Deck(2, 14);
-        ArrayList<Card> emptyHand = new ArrayList<>();
         cards = new ArrayList<>(deck.getDeck());
         // Initialize the Players
-        this.human = new Player("Player", emptyHand);
-        this.dealer = new Player("Dealer", emptyHand);
-        this.aiPlayer1 = new Player("Ai", emptyHand);
-        this.aiPlayer2 = new Player("Ai2", emptyHand);
+        this.human = new Player("Player", new ArrayList<>(), 100);
+        this.dealer = new Player("Dealer", new ArrayList<>());
+        this.aiPlayer1 = new Player("Ai", new ArrayList<>(), 100);
+        this.aiPlayer2 = new Player("Ai2", new ArrayList<>(), 100);
 
         players = new ArrayList<>();
 
@@ -40,27 +43,68 @@ public class BlackJack {
     }
 
     public void play() {
-        for (int i = 0; i < 2; i++) {
-            for (Player player : players) {
-                hit(player);
+        int playerChoice;
+        while (players.getFirst().getCredits() > 10) {
+            System.out.println("Ai " + players.getFirst().getCredits() + " credite");
+            System.out.println("Cate credite ai vrea sa pariezi?\nMinimul este 10");
+            int creditsPlayed = scanner.nextInt();
+
+            if (creditsPlayed >= 10) {
+                players.getFirst().setCredits(-creditsPlayed);
+                System.out.println("TEMP: ai" + players.getFirst().getCredits() + " credite");
+                for (int i = 0; i < 2; i++) {
+                    for (Player player : players) {
+                        hit(player);
+                    }
+                }
+
+                nextPlayer();
+
+                System.out.println(playerWin(creditsPlayed));
+                System.out.println(players.getFirst().getCredits());
+                if (players.getFirst().getCredits() < 10) {
+                    System.out.println("Nu ai destui bani sa joci la masa asta, SARACULE!");
+                    break;
+                }
+                System.out.println("Ai vrea sa mai joci o mana?\n1 pt da 2 pt nu");
+                playerChoice = scanner.nextInt();
+                if (playerChoice == 1) {
+                    newTurn();
+                    continue;
+                }
+                else{
+                    System.out.println("Te mai asteptam pe la noi");
+                    break;
+                }
+
             }
+            else{
+                System.out.println("Nu ai pariat destul");
+            }
+          
+                
+            
         }
-        nextPlayer();
-        playerWin();
+        
+    }
+
+    public void newTurn(){
+        for(Player player : players){
+            player.setCards(new ArrayList<>());
+        }
+        this.deck = new Deck(2, 14);
+        this.cards = new ArrayList<>(deck.getDeck());
+        
     }
 
     private void nextPlayer() {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Player> activePlayers = new ArrayList<>(players);
-        // ArrayList<Player> copyOfPlayers = activePlayers;
-        // this.currPlayer = activePlayers.getFirst();
         for (Player currPlayer : activePlayers) {
-            //activePlayers.remove(activePlayers.getFirst());
             if (!currPlayer.getType().equals("Player") && !currPlayer.getType().equals("Dealer")) {
                 if (currPlayer.checkTotal() < 17) {
                     hit(currPlayer);
                 } else {
-                    //stand(currPlayer);
                     continue;
                 }
             } else if (currPlayer.getType().equals("Dealer")) {
@@ -69,11 +113,9 @@ public class BlackJack {
                 while (true) {
                     if (currPlayer.checkTotal() > 21) {
                         System.out.println("You busted! Out");
-                        //stand(this.currPlayer);
                         break;
                     } else if (currPlayer.checkTotal() == 21) {
                         System.out.println("Ai BlackJack");
-                        // stand(this.currPlayer);
                         break;
                     }
                     System.out.println("\nMake your choice: ");
@@ -83,7 +125,6 @@ public class BlackJack {
                     if (choice == 1) {
                         hit(currPlayer);
                     } else if (choice == 2) {
-                        //stand(this.currPlayer);
                         break;
                     } else {
                         System.out.println("Invalid choice! Bye");
@@ -93,7 +134,6 @@ public class BlackJack {
         }
     }
 
-
     private void hit(Player playerToHit) {
         if (!this.cards.isEmpty()) {
             Card card = cards.removeLast();
@@ -102,7 +142,6 @@ public class BlackJack {
         if (this.cards.size() >= 2) {
             printTable();
         }
-//        clearScreen();
     }
 
     private void ShowCards(Player playerToHit) {
@@ -117,7 +156,8 @@ public class BlackJack {
 
     private void dealerTurn(Player currPlayer) {
         if (currPlayer.cards.size() == 2) {
-            System.out.println(currPlayer.getType() + ": " + currPlayer.getCards() + "(" + currPlayer.checkTotal() + ")");
+            System.out
+                    .println(currPlayer.getType() + ": " + currPlayer.getCards() + "(" + currPlayer.checkTotal() + ")");
         }
         while (currPlayer.checkTotal() <= 16) {
             hit(currPlayer);
@@ -135,44 +175,32 @@ public class BlackJack {
         System.out.println("----------------------------");
     }
 
-    private void playerWin() {
-        if (players.getFirst().checkTotal() == 21) {
-            System.out.println("BlackJack. You Won !!!");
-        } else
-            if (players.getLast().checkTotal() == 21) {
-            System.out.println("Dealer has BlackJack. You lost !!!");
-        }
-        if (players.getLast().checkTotal() == 21 && players.getFirst().checkTotal() == 21) {
-            System.out.println("BlackJack Tie !!!");
-            }
-        if (players.getFirst().checkTotal() < 21) {
-            if (players.getLast().checkTotal() < players.getFirst().checkTotal() || players.getLast().checkTotal() > 21) {
-                System.out.println("You won !!!");
-            }
-        }
-        if (players.getLast().checkTotal() < 21 && players.getLast().checkTotal() > players.getFirst().checkTotal()) {
-            System.out.println("You lost !!!");
-        }
+    private String playerWin(int creditsPlayed) {
         if (players.getFirst().checkTotal() > 21) {
-            System.out.println("Bust !!!");
+            return "Bust !!!";
         }
-        if (players.getFirst().checkTotal() == players.getLast().checkTotal()) {
-            System.out.println("It's a draw !!!");
+
+        if (players.getFirst().checkTotal() == 21) {
+
+            players.getFirst().setCredits(creditsPlayed * 3);
+            return "BlackJack. You Won !!!";
+
+            
+        } else if (players.getLast().checkTotal() == 21) {
+            return "Dealer has BlackJack. You lost !!!";
         }
+
+        if (players.getLast().checkTotal() < players.getFirst().checkTotal() || players.getLast().checkTotal() > 21) {
+            players.getFirst().setCredits(creditsPlayed * 2);
+            return "You won !!!";
+        }
+
+        if (players.getLast().checkTotal() > players.getFirst().checkTotal()) {
+            return "You lost !!!";
+        }
+
+        players.getFirst().setCredits(creditsPlayed);
+        return "It's a draw !!!";
     }
 }
-
-
-// in if daca playerul are sub 21 iar daca dealer si player au egal afiseaza tie
-// la dealer turn, trebuie while pt cat are 16
-
-
-//daca playerul nu are bust
-    //daca dealerul are carti mai mici decat player
-        //afiseaza mesaj ''ai castigat''
-            //else afiseaza mesaj ''looser''
-
-
-
-
 
