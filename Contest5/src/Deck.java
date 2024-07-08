@@ -13,8 +13,8 @@ public class Deck {
     }
 
     protected void initializeDeck(int min, int max) {
-        //String[] suits = {"♥️", "♠️", "♦️", "♣️"};
-        String[] suits = {"A", "B", "C", "D"};
+        String[] suits = {"♥️", "♠️", "♦️", "♣️"};
+//      String[] suits = {"A", "B", "C", "D"};
         for (String suit : suits) {
             for (int i = min; i <= max; i++) {
                 this.deck.add(new Card(i, suit));

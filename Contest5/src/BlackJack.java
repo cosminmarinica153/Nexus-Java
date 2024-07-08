@@ -81,11 +81,7 @@ public class BlackJack {
             else{
                 System.out.println("Nu ai pariat destul");
             }
-          
-                
-            
         }
-        
     }
 
     public void newTurn(){
@@ -94,7 +90,6 @@ public class BlackJack {
         }
         this.deck = new Deck(2, 14);
         this.cards = new ArrayList<>(deck.getDeck());
-        
     }
 
     private void nextPlayer() {
@@ -175,6 +170,11 @@ public class BlackJack {
         System.out.println("----------------------------");
     }
 
+    /**
+     * Calculates wether the game ending scenario was reached
+     * @param creditsPlayed number of credits played by the player
+     * @return game scenario message
+     */
     private String playerWin(int creditsPlayed) {
         if (players.getFirst().checkTotal() > 21) {
             return "Bust !!!";
