@@ -3,10 +3,12 @@ import utils.Card;
 import java.util.ArrayList;
 
 public class Player {
-    protected final String type;
-    protected ArrayList<Card> cards;
-    protected int total;
-    protected int credits;
+    private final String type;
+    private ArrayList<Card> cards;
+    private int total;
+    private int credits;
+    private int bet;
+
 
     public Player(String type, ArrayList<Card> cards, int credits) {
         this.type = type;
@@ -37,6 +39,8 @@ public class Player {
     public void setCredits(int credits){
         this.credits += credits;
     }
+    public int getBet(){return this.bet;}
+    public void setBet(int bet) {this.bet = bet;}
     public void setCards(ArrayList<Card> cards){
         this.cards = cards;
     }
