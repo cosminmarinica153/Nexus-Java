@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
-public class Hand {
+public class Hand implements Serializable {
     private List<Card> cards;
 
     public Hand() {
