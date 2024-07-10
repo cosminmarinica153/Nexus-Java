@@ -180,7 +180,7 @@ public class BlackJack {
             return "Bust !!!";
         }
 
-        if (players.getFirst().checkTotal() == 21) {
+        if (players.getFirst().checkoTtal() == 21) {
 
             players.getFirst().setCredits(creditsPlayed * 3);
             return "BlackJack. You Won !!!";

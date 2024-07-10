@@ -1,31 +1,65 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 public class Server {
     private final int PORT = 2222;
     private ServerSocket serverSocket;
+    private static ArrayList<ClientHandler> clients = new ArrayList<>();
 
+
+    public void start() throws IOException{
+        serverSocket = new ServerSocket(PORT);
+        System.out.println("The server started listening to port: " + PORT);
+        while (true) {
+            Socket socket = serverSocket.accept();
+            System.out.println("Client connected from: " + socket.getInetAddress());
+            clients.add(new ClientHandler(socket)); 
+            
+        }
+    }
+    
     public static class ClientHandler {
         private final Socket clientSocket;
         private PrintWriter out;
         private BufferedReader in;
 
-        public ClientHandler(Socket socket) {
+        public ClientHandler(Socket socket) throws IOException {
             this.clientSocket = socket;
+            out = new PrintWriter(clientSocket.getOutputStream(),true);
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            new Thread(()->{
+                try{
+                    while (true) {
+                        String res = in.readLine();
+                        System.out.println(res); //TEMP
+                        broadcastMessage(res);
+
+                    }
+                }catch(IOException e){
+                    System.out.println("N a mers");
+                }
+                    
+                
+            }).start();
+            
         }
 
-        public void getMessage() {
-
+        public String getMessage() throws IOException {
+            
+            return in.readLine();
 
         }
 
         public void sendMessage(String message) {
-
+            out.println(message);
 
         }
 
         public void broadcastMessage(String message) {
-
+            for(ClientHandler client : clients){
+                client.sendMessage(message);
+            }
 
         }
     }
@@ -37,6 +71,7 @@ public class Server {
         private BlackJack game;
 
         public SessionHandler() {
+            
             this.players = new ClientHandler[4];
         }
 
@@ -61,7 +96,7 @@ public class Server {
         }
 
         public void startGame() {
-//      BlackJack blackjack = new BlackJack();
+//          BlackJack blackjack = new BlackJack();
 
         }
 
@@ -69,6 +104,8 @@ public class Server {
 
 
         }
+
+        
 
         public void run(){
 
