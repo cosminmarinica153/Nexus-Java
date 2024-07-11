@@ -3,15 +3,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.*;
+import java.io.*;
 
 
 public class GUI extends JFrame {
-    private JFrame frame;
-    private JPanel panel;
-    private JButton takeASitbtn;
-    private JButton takeBetBtn;
-    private JButton takeDeckBtn;
-    private JButton takeHandBtn;
+    private JButton readyBtn;
+    private JButton startBtn;
     private ServerClient serverClient;
     private final JButton hitBtn;
     private final JButton standBtn;
@@ -34,6 +32,8 @@ public class GUI extends JFrame {
         hitBtn = new JButton("Hit");
         hitBtn.setVisible(false);
         conectionBtn = new JButton("Conect");
+        readyBtn = new JButton("Ready");
+        startBtn = new JButton("Start");
 
 
         JPanel topPanel = new JPanel(new GridBagLayout());
@@ -52,6 +52,8 @@ public class GUI extends JFrame {
         topPanel.add(conectionBtn, c);
 
 
+
+
         JPanel bottomPanel = new JPanel(new GridBagLayout());
 
 
@@ -61,9 +63,17 @@ public class GUI extends JFrame {
         c.anchor = GridBagConstraints.EAST;
         bottomPanel.add(hitBtn, c);
         c.gridx = 6;
-        c.gridy = 0;
+        c.gridy = 1;
         c.anchor = GridBagConstraints.EAST;
         bottomPanel.add(standBtn, c);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.EAST;
+        bottomPanel.add(readyBtn, c);
+        c.gridx = 5;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.EAST;
+        bottomPanel.add(startBtn, c);
 
 
         add(topPanel, BorderLayout.NORTH);
@@ -86,6 +96,8 @@ public class GUI extends JFrame {
                         hitBtn.setVisible(true);
                         standBtn.setVisible(true);
                         serverClient.sendObject(player);
+                        readyBtn.setVisible(true);
+                        startBtn.setVisible(true);
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -109,6 +121,26 @@ public class GUI extends JFrame {
             }
         });
 
+        readyBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                serverClient.sendMessage("Ready");
+
+
+
+            }
+        });
+
+        startBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                serverClient.sendMessage("Start");
+
+            }
+        });
+
 
 
 
@@ -123,6 +155,7 @@ public class GUI extends JFrame {
 
     public static void main(String[] args) {
         GUI gui =new GUI();
+        GUI gui1 =new GUI();
 
     }
 

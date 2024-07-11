@@ -1,7 +1,6 @@
 import java.net.*;
 import java.io.*;
 
-
 public class ServerClient  {
     private Socket clientSocket;
     private BufferedReader in;
@@ -27,6 +26,10 @@ public class ServerClient  {
                         if(response.equals("Hit")){
                             System.out.println("suntem aici");
                         }
+                        if(response.equals("Start")){
+                            boolean getStart = false;
+
+                        }
                     }
                 }
                 catch(Exception e){
@@ -50,7 +53,6 @@ public class ServerClient  {
         catch (IOException e){
             e.printStackTrace();
         }
-
     }
 
 }

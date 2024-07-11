@@ -11,6 +11,7 @@ public class ServerHost  {
     private Player dealer= new Player("dealer",true);
     private HashMap <String, ClientHandler> clientHandlerHashMap =new HashMap<>();
     private boolean showDealerFirstCard;
+    private boolean getStart = true;
 
 
 
@@ -72,17 +73,39 @@ public class ServerHost  {
                 while((input = in.readLine()) != null) {
                     switch(input) {
                         case "Start":
-                            deck.deckSize();
+
+                            if(getStart){
+
+                                deck.deckSize();
+                                int allReady = 0;
+                                for(int i =0; i<players.size(); i++){
+                                    if (players.get(i).getReady()) {
+                                        allReady++;
+                                    }
+                                }
+                                if (allReady == players.size()) {
+                                    dealFirstCards();
+                                    getStart = false;
+                                }
+
+
+                            }
 
                             break;
+
+                        case "Ready":
+                            player.setReady(true);
+                            System.out.println("Ready");
+                            System.out.println(player.getName());
+
+                            break;
+
                         case "Hit" :
 
-                            dealFirstCards();
-                            System.out.println(deck.deckSize());
-                            System.out.println("player req a hit");
-                            System.out.println(deck.toString());
-                            out.println(deck.toString());
-                            out.println("Hit");
+
+                            player.addCardToHand(deck.drawCard());
+                            System.out.println(player.getName() + player.getHand() + "  (" +  player.getHandValue() + ")");
+
 
                             break;
                         case "Stand":
