@@ -23,11 +23,7 @@ public class Player {
     }
 
     public ArrayList<Card> getCards() {
-        if (this.type.equals("Dealer")) {
-            ArrayList<Card> dealerCards = new ArrayList<>(this.cards);
-            return dealerCards;
-        }
-        return new ArrayList<>(this.cards);
+        return this.cards;
     }
 
     public String getType() {

@@ -31,9 +31,6 @@ public class Server {
             new Thread(()->{
                 try{
                     while (true) {
-                        String res = in.readLine();
-                        System.out.println(res); //TEMP
-                        broadcastMessage(res);
 
                     }
                 }catch(IOException e){
@@ -51,17 +48,12 @@ public class Server {
 
         }
 
-        public void sendMessage(String message) {
-            out.println(message);
+        public void sendMessage(Dispatcher disp) {
+            out.println(disp);
 
         }
 
-        public void broadcastMessage(String message) {
-            for(ClientHandler client : clients){
-                client.sendMessage(message);
-            }
-
-        }
+        
     }
 
     public static class SessionHandler extends Thread {
@@ -73,6 +65,8 @@ public class Server {
         public SessionHandler() {
             
             this.players = new ClientHandler[4];
+
+            
         }
 
         public void addPlayer(ClientHandler player) {
@@ -96,7 +90,16 @@ public class Server {
         }
 
         public void startGame() {
-//          BlackJack blackjack = new BlackJack();
+            Player[] players = new Player[4]; 
+
+            for(int i = 0; i < this.players.length;i++){
+                if(this.players[i] != null){
+                    players[i] = new Player("Player " + (i+1), new ArrayList<>(),100);
+                }
+            }
+
+            BlackJack blackjack = new BlackJack(players,this);
+
 
         }
 
@@ -104,12 +107,29 @@ public class Server {
 
 
         }
+        public void broadcast(Dispatcher dips) {
+            for(ClientHandler player : players){
+                if (player == null) {
+                    continue;
+                }
+                player.sendMessage(dips);
+            }
 
+        }
+
+        public void dispatch(Dispatcher disp){
+            disp.getDestiantion().sendMessage(disp);
+        }
+
+        public ClientHandler getDestiantion(int index){
+            return this.players[index];
+        }
         
 
         public void run(){
 
         }
+        
     }
 
 
