@@ -9,9 +9,11 @@ public class ServerHost  {
     private ArrayList<Player>players = new ArrayList<>();
     private Deck deck =new Deck();
     private Player dealer= new Player("dealer",true);
-    private HashMap <String, ClientHandler> clientHandlerHashMap =new HashMap<>();
+    private static HashMap <String, ClientHandler> clientHandlerHashMap =new HashMap<>();
     private boolean showDealerFirstCard;
     private boolean getStart = true;
+    private int currentPlayer = 0;
+
 
 
 
@@ -32,12 +34,41 @@ public class ServerHost  {
             players.get(i).addCardToHand(deck.drawCard());
             System.out.println(players.get(i).getHand());
         }
+        dealer.addCardToHand(deck.drawCard());
+        dealer.addCardToHand(deck.drawCard());
+        System.out.println(dealer.toString(showDealerFirstCard));
 
+    }
+
+    private void checkWinner(Player player) {
+        if (player.getHandValue() == 21) {
+            System.out.println(player.getName() + " Blackjack....You win");
+        } else if (player.getHandValue() > dealer.getHandValue() && player.getHandValue() <= 21) {
+            System.out.println(player.getName() + " win with " + player.getHandValue() + "!");
+        } else if (player.getHandValue() > 21) {
+            System.out.println(player.getName() + " You lose");
+        }
+    }
+
+    private void determineWinners() {
+        showDealerFirstCard = true;
+        System.out.println("Dealer: " + dealer.toString(showDealerFirstCard));
+        for (Player player : players) {
+            if (player.getHandValue() <= 21 && (player.getHandValue() > dealer.getHandValue() || dealer.getHandValue() > 21)) {
+                System.out.println(player.getName() + " win with " + player.getHandValue() + "!");
+            } else {
+                System.out.println(player.getName() + " lose");
+            }
+        }
     }
 
 
 
-
+    public static void sendMessageToClient(String clientName, String message){
+        ClientHandler handler = clientHandlerHashMap.get(clientName);
+        if(handler != null)
+            handler.sendMessage(message);
+    }
 
     private class ClientHandler extends Thread {
         private Player player;
@@ -47,14 +78,18 @@ public class ServerHost  {
         public Main main = new Main( 1000);
         private ObjectInputStream ois;
 
+        public void sendMessage(String msg){
+            if(out != null);
+            out.println(msg);
+        }
+
 
 
         public ClientHandler(Socket clientSocket) {
             this.clientSocket = clientSocket;
 
-
         }
-//        Deck deck =new Deck();
+
 
 
 
@@ -73,9 +108,8 @@ public class ServerHost  {
                 while((input = in.readLine()) != null) {
                     switch(input) {
                         case "Start":
-
+                            System.out.println("Start case");
                             if(getStart){
-
                                 deck.deckSize();
                                 int allReady = 0;
                                 for(int i =0; i<players.size(); i++){
@@ -87,8 +121,6 @@ public class ServerHost  {
                                     dealFirstCards();
                                     getStart = false;
                                 }
-
-
                             }
 
                             break;
@@ -97,19 +129,44 @@ public class ServerHost  {
                             player.setReady(true);
                             System.out.println("Ready");
                             System.out.println(player.getName());
-
+                            sendMessageToClient(players.get(0).getName(), "Hello user1");
+                            sendMessageToClient(players.get(1).getName(), "Hello user2");
+                            sendMessageToClient(player.getName(), "hoadfjawuefd");
                             break;
 
+                        case "Double" :
+                            System.out.println("Double it");
+                            break;
+
+
                         case "Hit" :
-
-
-                            player.addCardToHand(deck.drawCard());
-                            System.out.println(player.getName() + player.getHand() + "  (" +  player.getHandValue() + ")");
-
+                            if (players.get(currentPlayer).equals(player) && player.getHandValue() <= 21) {
+                                player.addCardToHand(deck.drawCard());
+                                System.out.println(player.getName() + player.getHand() + "  (" + player.getHandValue() + ")");
+                                checkWinner(player);
+                                if (player.getHandValue() > 21) {
+                                    currentPlayer = (currentPlayer + 1) % players.size();
+                                    if (currentPlayer == 0) {
+                                        determineWinners();
+                                    }
+                                }
+                            } else {
+                                System.out.println(player.getName() + " can't get Hit");
+                            }
 
                             break;
                         case "Stand":
-                            System.out.println("player stand");
+                            if (players.get(currentPlayer).equals(player) && player.getHandValue() <= 21) {
+                                System.out.println(player.getName() + " choose to Stand");
+                                currentPlayer = (currentPlayer + 1) % players.size();
+                                System.out.println("It's your turn " + players.get(currentPlayer).getName());
+                                if (currentPlayer == 0) {
+                                    showDealerFirstCard = true;
+                                    System.out.println(dealer.toString(showDealerFirstCard));
+                                }
+                            } else {
+                                System.out.println("It's not your turn " + player.getName());
+                            }
                             break;
 
 

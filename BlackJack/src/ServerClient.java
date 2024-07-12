@@ -7,6 +7,19 @@ public class ServerClient  {
     private PrintWriter out;
     private Thread receiverThread;
     private ObjectOutputStream oos;
+    private MessageHandler messageHandler;
+
+
+    public interface MessageHandler{
+        void  handleMessage(String msg);
+
+
+    }
+
+    public void setMessageHandler(MessageHandler messageHandler){
+        this.messageHandler = messageHandler;
+
+    }
 
     public void startConection(String host, int port) throws IOException {
         clientSocket =new Socket("localhost",port);
@@ -16,25 +29,7 @@ public class ServerClient  {
         receiverThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try{
-                    String response;
-                    while((response = in.readLine())!=null){
-                        System.out.println(response);
-                        if(response.equals("exit")){
-                            clientSocket.close();
-                        }
-                        if(response.equals("Hit")){
-                            System.out.println("suntem aici");
-                        }
-                        if(response.equals("Start")){
-                            boolean getStart = false;
-
-                        }
-                    }
-                }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
+                listenForMessages();
             }
         });
         receiverThread.start();
@@ -46,6 +41,9 @@ public class ServerClient  {
 
     }
 
+    public String receiveMessage() throws IOException{
+        return this.in.readLine();
+    }
     public void sendObject(Player player){
         try {
             oos.writeObject(player);
@@ -55,4 +53,21 @@ public class ServerClient  {
         }
     }
 
+    public void listenForMessages(){
+        String response;
+        try{
+            while((response = in.readLine())!=null){
+                if(messageHandler != null){
+                    messageHandler.handleMessage(response);
+                }
+            }
+        }
+        catch (IOException e){
+
+        }
+    }
+
 }
+
+
+
