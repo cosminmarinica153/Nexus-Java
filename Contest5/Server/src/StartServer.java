@@ -2,7 +2,7 @@ import java.io.IOException;
 
 public class StartServer {
     public static void main(String[] args) throws IOException{
-        // new Server().start();
+        new Server().start();
 
         // Player[] players = new Player[5];
         // players[0] = new Player("Player 1" , new ArrayList<>(),100);
@@ -23,7 +23,5 @@ public class StartServer {
 
         // System.out.println(player2.getType());
 
-        String s = "/asjd";
-        System.out.println(s.split("/")[1]);
     }
 }

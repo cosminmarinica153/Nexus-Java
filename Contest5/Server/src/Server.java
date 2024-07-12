@@ -44,12 +44,13 @@ public class Server {
                     String message;
                     while ((message = in.readLine()) != null) {
                         if (message.charAt(0) == '/') {
-                            commands(message.split("/")[1]);
+                            commands(message.split(" "));
+                            continue;
                         }
                         messageQueue.put(message);
                     }
                 }catch(IOException e){
-                    System.out.println("N a mers");
+                    System.out.println("Client disconnected.");
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -60,8 +61,21 @@ public class Server {
             
         }
 
-        public void commands(String command){
-
+        public void commands(String[] mesaj){
+            switch (mesaj[0]) {
+                case "/CreateSession":
+                    createSession(mesaj[1]);
+                    break;
+                case "/ConnectSession":
+                    connectSession(mesaj[1]);
+                    break;
+                case "/DisconnectSession":
+                    disconnectSession(mesaj[1]);
+                    break;
+                default:
+                    out.println("Invalid commnad!");
+                    break;
+            }
         }
 
         public String getNextMessage() {
@@ -80,14 +94,26 @@ public class Server {
 
         }
 
-        public void createSession(){
-            allSessions.put(getNextMessage(), new SessionHandler());
+        public void createSession(String name){
+            SessionHandler session = new SessionHandler();
+            session.start();
+            allSessions.put(name,session);
+            
+            connectSession(name);
         }
-        public void connectSession(){
-
+        public void connectSession(String name){
+            synchronized(allSessions){
+                SessionHandler session = allSessions.get(name);
+                session.addPlayer(this);
+                System.out.println(clientSocket.getInetAddress() + " connected");
+            }
         }
-        public void disconnectSession(){
-
+        public void disconnectSession(String name){
+            synchronized(allSessions){
+                SessionHandler session = allSessions.get(name);
+                session.removePlayer(this);
+                System.out.println(clientSocket.getInetAddress() + " disconnected");
+            }
         }
 
         
@@ -98,9 +124,10 @@ public class Server {
         //the session is the BlackJack table
         private ClientHandler[] players;
         private BlackJack game;
-
+        private String name; //temp
+        private static int index = 1;
         public SessionHandler() {
-            
+            this.name = "Session " + index++;
             this.players = new ClientHandler[4];
 
             
@@ -163,50 +190,89 @@ public class Server {
             return this.players[index].getNextMessage();
         }
 
-        public void isReady(){
-            broadcast(new Dispatcher("All players type ready to start the game"));
-            int[] count = new int[4];
-            while (true) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                for(int i =0; i < players.length; i++){
-                    if(players[i].getNextMessage() == null) continue;
-                    if (players[i].getNextMessage().toLowerCase() == "ready") {
-                        count[i] = 1;
+            public void isReady(){
+                broadcast(new Dispatcher("All players type ready to start the game"));
+                int[] count = new int[4];
+                while (true) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
                     }
-                }
-                boolean ready = true;
-                for(int i = 0; i < count.length ; i++){
-                    if (count[i] == 0) {
-                        ready = false;
-                        break;
+                    for(int i =0; i < players.length; i++){
+                        if (players[i] == null) {
+                            continue;
+                        }
+                        String message = players[i].getNextMessage();   
+                        if (message.equalsIgnoreCase("ready")) {
+                            count[i] = 1;
+                        }
+                        System.out.println(message + " ");                  
                     }
-                                // p1 p2 null p4 // p1 null null p4
+                    
+                    boolean ready = true;
+                    for(int i = 0; i < count.length ; i++){
+                        if (players[i] == null) {
+                            continue;
+                        }
+                        if (count[i] == 0) {
+                            ready = false;
+                            break;
+                        }
+                                    // p1 p2 null p4 // p1 null null p4
+                    }
+                    if(ready){
+                        System.out.println("All players are ready");
+                        return;
+                    } 
+
                 }
-                if(ready) return;
             }
-        }
 
         public void run(){
-            // isReady();
+            System.out.println(this.name + " is running");
 
-            // startGame();
+            isReady();
 
-            // while (true) {
-            //     game.play();
+            startGame();
+
+            while (true) {
+                game.play();
+                boolean empty = true;
+                for(ClientHandler player : players){
+                    if (player!=null) {
+                        empty = false;
+                        break;
+                    }
+                    
+                }
+                if (empty) {
+                    break;
+                }
                 
-            // }
-            System.out.println("Session is running");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             }
+            // while (true) {
+                
+            //     System.out.println(this.name + " is running");
+            //     try {
+            //         Thread.sleep(2000);
+            //     } catch (InterruptedException e) {
+            //         // TODO Auto-generated catch block
+            //         e.printStackTrace();
+            //     }
+            //     boolean empty = true;
+            //     for(ClientHandler player : players){
+            //         if (player!=null) {
+            //             empty = false;
+            //             break;
+            //         }
+                    
+            //     }
+            //     if (empty) {
+            //         break;
+            //     }
+            // }
         }
 
 

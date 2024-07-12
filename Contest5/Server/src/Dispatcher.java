@@ -1,5 +1,3 @@
-import Server.ClientHandler;
-
 public class Dispatcher {
     private Server.ClientHandler destination;
     private Actions action;
@@ -18,6 +16,9 @@ public class Dispatcher {
     }
     public Dispatcher(Actions action){
         this.action = action;
+    }
+    public Dispatcher(){
+
     }
     
     public Server.ClientHandler getDestiantion(){

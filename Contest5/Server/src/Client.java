@@ -19,7 +19,7 @@ public class Client {
                     System.out.println(in.readLine()); //TEMP
                 }
             }catch(IOException e){
-                System.out.println("N a mers");
+                System.out.println("Server is no longer running");
             }
                 
             

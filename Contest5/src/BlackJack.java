@@ -56,15 +56,22 @@ public class BlackJack {
 
         for (int j = 0; j < 2; j++) {
             for (int i = players.length - 1; i >= 0; i--) {
-                if (players[i].getBet() == 0 || players[i] == null) {
+                if (players[i] == null) {
                     continue;
                 }
+                if (players[i].getBet() == 0) {
+                    continue;
+                }
+                
                 hit(players[i]);
             }
         }
 
         for (int i = 0; i < players.length - 1; i++) {
-            if (players[i].getBet() == 0 || players[i] == null) {
+            if (players[i] == null) {
+                continue;
+            }
+            if (players[i].getBet() == 0) {
                 continue;
             }
             playRound(players[i]);
@@ -72,7 +79,10 @@ public class BlackJack {
         dealerTurn(players[players.length - 1]);
 
         for (int i = 0; i < players.length - 1; i++) {
-            if (players[i].getBet() == 0 || players[i] == null) {
+            if (players[i] == null) {
+                continue;
+            }
+            if (players[i].getBet() == 0) {
                 continue;
             }
             playerWin(players[i]);
@@ -95,11 +105,12 @@ public class BlackJack {
             session.dispatch(new Dispatcher("Make your choice: ", session.getDestiantion(index)));
             session.dispatch(new Dispatcher("(1) Hit", session.getDestiantion(index)));
             session.dispatch(new Dispatcher("(2) Stand", session.getDestiantion(index)));
-            String choice = session.getInput(index);
+            Dispatcher disp = new Dispatcher();
+            int choice = Integer.parseInt(session.getInput(index));
 
-            if (choice == "1") {
+            if (choice == 1) {
                 hit(player);
-            } else if (choice == "2") {
+            } else if (choice == 2) {
                 break;
             } else {
                 session.dispatch(new Dispatcher("Invalid choice! Bye", session.getDestiantion(index)));
@@ -109,10 +120,11 @@ public class BlackJack {
 
     public void startBet() {
         for (int i = 0; i < players.length - 1; i = i + 1) {
+            int creditsPlayed = 1;
             if (this.players[i] == null) {
                 continue;
             }
-            if (this.players[i].getCredits() < 10) {
+            if (this.players[i].getCredits() < 10 ) {
                 players[i].setBet(0);
                 session.dispatch(new Dispatcher("You don't have enough credits", session.getDestiantion(i)));
                 continue;
@@ -123,7 +135,7 @@ public class BlackJack {
                     new Dispatcher("How many credits do you want to bet? Min bet is 10", session.getDestiantion(i)));
             session.dispatch(new Dispatcher("Bet 0 if you don't want to join", session.getDestiantion(i)));
 
-            int creditsPlayed = Integer.parseInt(session.getInput(i));
+            creditsPlayed = Integer.parseInt(session.getInput(i));
 
             while (creditsPlayed < 10 && creditsPlayed != 0) {
                 session.dispatch(new Dispatcher("Bet is insuficient", session.getDestiantion(i)));
@@ -154,18 +166,20 @@ public class BlackJack {
         if (this.cards.size() >= 2) {
 
             for (Player player : players) {
+                if(player == null){
+                    continue;
+                }
                 showCards(player);
             }
         }
     }
 
-    private void showCards(Player playerToHit) { // trb broadcast
+    private void showCards(Player playerToHit) { 
         if (playerToHit.getType().equals("Dealer") && playerToHit.getCards().size() == 2) {
-            System.out.println(playerToHit.getType() + ": [" + playerToHit.getCards().get(0) + " ?" + "]("
-                    + playerToHit.getCards().get(0).getValue() + ")");
+            session.broadcast(new Dispatcher(playerToHit.getType() + ": [" + playerToHit.getCards().get(0) + " ?" + "]("+ playerToHit.getCards().get(0).getValue() + ")"));
+
         } else {
-            System.out.println(
-                    playerToHit.getType() + ": " + playerToHit.getCards() + "(" + playerToHit.checkTotal() + ")");
+            session.broadcast(new Dispatcher(playerToHit.getType() + ": " + playerToHit.getCards() + "(" + playerToHit.checkTotal() + ")"));
         }
     }
 
