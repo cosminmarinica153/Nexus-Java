@@ -1,14 +1,20 @@
-import utils.Card;
-
 import java.util.ArrayList;
 
+import utils.Card;
+
 public class Player {
-    private final String type;
+    private String type;
     private ArrayList<Card> cards;
     private int total;
     private int credits;
     private int bet;
 
+    public Player(){
+    //     this.type = type;
+    //     this.cards = new ArrayList<>(cards);
+    //     this.total = 0;
+    //     this.credits = credits;
+     }
 
     public Player(String type, ArrayList<Card> cards, int credits) {
         this.type = type;

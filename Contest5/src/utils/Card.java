@@ -4,6 +4,9 @@ public class Card {
     private int value; // 2 - 14
     private String suit; // Trefla, Inima etc
 
+    public Card(){
+        
+    }
     public Card(int value, String suit) {
         this.value = value;
         this.suit = suit;

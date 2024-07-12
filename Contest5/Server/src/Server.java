@@ -1,11 +1,20 @@
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 
 public class Server {
     private final int PORT = 2222;
     private ServerSocket serverSocket;
     private static ArrayList<ClientHandler> clients = new ArrayList<>();
+    private static HashMap<String, SessionHandler> allSessions = new HashMap<>(); 
 
 
     public void start() throws IOException{
@@ -23,18 +32,27 @@ public class Server {
         private final Socket clientSocket;
         private PrintWriter out;
         private BufferedReader in;
+        private BlockingQueue<String> messageQueue;
 
         public ClientHandler(Socket socket) throws IOException {
             this.clientSocket = socket;
             out = new PrintWriter(clientSocket.getOutputStream(),true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            messageQueue = new LinkedBlockingQueue<>();
             new Thread(()->{
                 try{
-                    while (true) {
-
+                    String message;
+                    while ((message = in.readLine()) != null) {
+                        if (message.charAt(0) == '/') {
+                            commands(message.split("/")[1]);
+                        }
+                        messageQueue.put(message);
                     }
                 }catch(IOException e){
                     System.out.println("N a mers");
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
                     
                 
@@ -42,14 +60,33 @@ public class Server {
             
         }
 
-        public String getMessage() throws IOException {
+        public void commands(String command){
+
+        }
+
+        public String getNextMessage() {
             
-            return in.readLine();
+            try {
+                return messageQueue.take();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                return null;
+            }
 
         }
 
         public void sendMessage(Dispatcher disp) {
             out.println(disp);
+
+        }
+
+        public void createSession(){
+            allSessions.put(getNextMessage(), new SessionHandler());
+        }
+        public void connectSession(){
+
+        }
+        public void disconnectSession(){
 
         }
 
@@ -98,15 +135,11 @@ public class Server {
                 }
             }
 
-            BlackJack blackjack = new BlackJack(players,this);
+            game = new BlackJack(players,this);
 
 
         }
 
-        public void endGame() {
-
-
-        }
         public void broadcast(Dispatcher dips) {
             for(ClientHandler player : players){
                 if (player == null) {
@@ -126,9 +159,57 @@ public class Server {
         }
         
 
-        public void run(){
-
+        public String getInput(int index) {
+            return this.players[index].getNextMessage();
         }
+
+        public void isReady(){
+            broadcast(new Dispatcher("All players type ready to start the game"));
+            int[] count = new int[4];
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                for(int i =0; i < players.length; i++){
+                    if(players[i].getNextMessage() == null) continue;
+                    if (players[i].getNextMessage().toLowerCase() == "ready") {
+                        count[i] = 1;
+                    }
+                }
+                boolean ready = true;
+                for(int i = 0; i < count.length ; i++){
+                    if (count[i] == 0) {
+                        ready = false;
+                        break;
+                    }
+                                // p1 p2 null p4 // p1 null null p4
+                }
+                if(ready) return;
+            }
+        }
+
+        public void run(){
+            // isReady();
+
+            // startGame();
+
+            // while (true) {
+            //     game.play();
+                
+            // }
+            System.out.println("Session is running");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+
         
     }
 

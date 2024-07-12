@@ -1,0 +1,11 @@
+{
+    "java.project.sourcePaths": [
+        "Contest5\\Server\\src",
+        "Contest5\\src"
+    ],
+    "java.project.referencedLibraries": [
+        "Contest5\\lib\\jackson-annotations-2.17.2.jar",
+        "Contest5\\lib\\jackson-core-2.17.2.jar",
+        "Contest5\\lib\\jackson-databind-2.17.2.jar"
+    ]
+}

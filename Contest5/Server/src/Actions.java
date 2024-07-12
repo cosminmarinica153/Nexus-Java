@@ -3,7 +3,7 @@ public enum Actions {
     quit,
     ready,
     broadcast,
-
+    
     //BlackJack Actions
     hit,
     stand,
