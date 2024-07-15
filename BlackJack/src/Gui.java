@@ -184,10 +184,13 @@ public class Gui extends JFrame {
 
 
     public static void main(String[] args) {
-        Gui gui =new Gui();
-        Gui gui1 =new Gui();
-        Gui gui2 = new Gui();
-        Gui gui3 = new Gui();
+        //Gui gui =new Gui();
+       // Gui gui1 =new Gui();
+       // Gui gui2 = new Gui();
+       // Gui gui3 = new Gui();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {new Gui();}
+        });
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {new Gui();}
         });

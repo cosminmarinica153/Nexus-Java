@@ -27,16 +27,21 @@ public class ServerHost  {
         }
 
     }
+    private void broadcast(String message) {
+        for (ClientHandler handler : clientHandlerHashMap.values()) {
+            handler.sendMessage(message);
+        }
+    }
 
     private void dealFirstCards(){
         for(int i =0; i<players.size(); i++){
             players.get(i).addCardToHand(deck.drawCard());
             players.get(i).addCardToHand(deck.drawCard());
-            System.out.println(players.get(i).getHand());
+            broadcast(players.get(i).getName() + "'s hand: " + players.get(i).getHand());
         }
         dealer.addCardToHand(deck.drawCard());
         dealer.addCardToHand(deck.drawCard());
-        System.out.println(dealer.toString(showDealerFirstCard));
+        broadcast("Dealer's hand: " + dealer.toString(showDealerFirstCard));
 
     }
 
@@ -52,14 +57,29 @@ public class ServerHost  {
 
     private void determineWinners() {
         showDealerFirstCard = true;
-        System.out.println("Dealer: " + dealer.toString(showDealerFirstCard));
+        broadcast("Dealer's final hand: " + dealer.toString(showDealerFirstCard));
         for (Player player : players) {
             if (player.getHandValue() <= 21 && (player.getHandValue() > dealer.getHandValue() || dealer.getHandValue() > 21)) {
-                System.out.println(player.getName() + " win with " + player.getHandValue() + "!");
+                broadcast(player.getName() + " wins with " + player.getHandValue() + "!");
             } else {
-                System.out.println(player.getName() + " lose");
+                broadcast(player.getName() + " loses");
             }
         }
+        // Reset for next round
+        resetGame();
+    }
+
+    private void resetGame() {
+        deck = new Deck();
+        for (Player player : players) {
+            player.clearHand();
+        }
+        dealer.clearHand();
+        currentPlayer = 0;
+        dealFirstCards();
+        showDealerFirstCard = false;
+        getStart = true;
+        broadcast("New round starting. Get ready!");
     }
 
 
@@ -139,33 +159,39 @@ public class ServerHost  {
                             break;
 
 
-                        case "Hit" :
+                        case "Hit":
                             if (players.get(currentPlayer).equals(player) && player.getHandValue() <= 21) {
                                 player.addCardToHand(deck.drawCard());
-                                System.out.println(player.getName() + player.getHand() + "  (" + player.getHandValue() + ")");
+                                String handUpdate = player.getName() + "'s hand: " + player.getHand() + " (" + player.getHandValue() + ")";
+                                System.out.println(handUpdate);
+                                broadcast(handUpdate);
                                 checkWinner(player);
                                 if (player.getHandValue() > 21) {
+                                    broadcast(player.getName() + " busts!");
                                     currentPlayer = (currentPlayer + 1) % players.size();
                                     if (currentPlayer == 0) {
                                         determineWinners();
+                                    } else {
+                                        broadcast("It's " + players.get(currentPlayer).getName() + "'s turn.");
                                     }
                                 }
                             } else {
-                                System.out.println(player.getName() + " can't get Hit");
+                                sendMessage("It's not your turn or you've already busted.");
                             }
-
                             break;
                         case "Stand":
                             if (players.get(currentPlayer).equals(player) && player.getHandValue() <= 21) {
-                                System.out.println(player.getName() + " choose to Stand");
+                                broadcast(player.getName() + " chooses to Stand");
                                 currentPlayer = (currentPlayer + 1) % players.size();
-                                System.out.println("It's your turn " + players.get(currentPlayer).getName());
                                 if (currentPlayer == 0) {
                                     showDealerFirstCard = true;
-                                    System.out.println(dealer.toString(showDealerFirstCard));
+                                    broadcast("Dealer's hand: " + dealer.toString(showDealerFirstCard));
+                                    determineWinners();
+                                } else {
+                                    broadcast("It's " + players.get(currentPlayer).getName() + "'s turn");
                                 }
                             } else {
-                                System.out.println("It's not your turn " + player.getName());
+                                sendMessage("It's not your turn or you've already busted.");
                             }
                             break;
 
